@@ -42,6 +42,7 @@ def crossover(parents, offspring_size):
         offspring[k, crossover_point:] = parents[parent2_idx, crossover_point:]
     return offspring
 
+# Instead copy one of the parents, and mutate it (it could be best or rank selection)
 
 # This is known as a random-based optimization technique. It tries to enhance the current solutions
 # by applying some random changes to them. Because such changes are random, we are not sure that they will produce
@@ -53,3 +54,6 @@ def mutation(offspring_crossover):
         random_value = numpy.random.uniform(-1.0, 1.0, 1)
         offspring_crossover[idx, 4] = offspring_crossover[idx, 4] + random_value
     return offspring_crossover
+
+
+# Use Guassian instead with a mean with 0 and a standard deviation of 0.1

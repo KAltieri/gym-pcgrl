@@ -2,12 +2,15 @@ import numpy
 import geneticAlgorithmSupport
 
 
+# Second approach, natural evolution: https://arxiv.org/pdf/1802.08842.pdf
+# Show the best neural network after running for next week + results
+
 # Parameters are: equation_inputs, num_weights, sol_per_pop, low, high, num_generations, num_parents_mating
 def main(equation_inputs, num_weights, sol_per_pop, lowIn, highIn, num_generations, num_parents_mating):
     # Initial population will be defined based on the number of weights, each chromosome
     # In the population will definitely have X genes, one for each weight.
 
-    # Defining the population side as a tuple
+    # Defining the population size as a tuple
     pop_size = (sol_per_pop, num_weights)
 
     # Now we create it
