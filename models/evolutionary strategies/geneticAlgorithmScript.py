@@ -44,6 +44,7 @@ def main(equation_inputs, num_weights, sol_per_pop, lowIn, highIn, num_generatio
 
 
 
+
 if __name__ == '__main__':
     # Below are test variables
     # Inputs of the equation.

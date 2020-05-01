@@ -1,4 +1,5 @@
 import numpy
+import random
 
 
 def cal_pop_fitness(equation_inputs, pop):
@@ -24,14 +25,33 @@ def select_mating_pool(pop, fitness, num_parents):
 # To produce from such parents
 def crossover(parents, offspring_size):
     offspring = numpy.empty(offspring_size)
+
+    """
+    Old crossover setup
+
     # The point at which crossover takes place between two parents. Usually it is at the center.
-    crossover_point = numpy.uint8(offspring_size[1] / 2)
+    # crossover_point = numpy.uint8(offspring_size[1] / 2)
+
+    # Take half of the offspring_size
 
     # Parents are selected in a way similar to a ring. The first with indices 0 and 1 mate
     # Then we select parent 1 with parent 2 for another offspring, then 2 and 3, etc.
     # If we reach the last parent, then we mate parent last with parent 0
 
+    """
+
+    # Take n = offspring_size[0] amount of the parents from the mating pool!
+    # Copy them and mutate them!
+    random_samples = random.sample(range(0, parents.shape[0]), offspring_size[0])
+
     for k in range(offspring_size[0]):
+
+        # Copying
+        offspring[k, :] = parents[random_samples[k], :]
+        """
+
+        Old crossover implementation
+
         # Index of the first parent to mate.
         parent1_idx = k % parents.shape[0]
         # Index of the second parent to mate.
@@ -40,6 +60,11 @@ def crossover(parents, offspring_size):
         offspring[k, 0:crossover_point] = parents[parent1_idx, 0:crossover_point]
         # The new offspring will have its second half of its genes taken from the second parent.
         offspring[k, crossover_point:] = parents[parent2_idx, crossover_point:]
+
+
+        """
+
+    # The next step will force all the offsprings (AKA parent copies) to go and be mutate at a index of each gene
     return offspring
 
 # Instead copy one of the parents, and mutate it (it could be best or rank selection)
@@ -51,9 +76,11 @@ def mutation(offspring_crossover):
     # Mutation changes a single gene in each offspring randomly.
     for idx in range(offspring_crossover.shape[0]):
         # The random value to be added to the gene.
-        random_value = numpy.random.uniform(-1.0, 1.0, 1)
-        offspring_crossover[idx, 4] = offspring_crossover[idx, 4] + random_value
+        random_value = numpy.random.normal(0, 0.1, 1) # Gaussian distribution with mean 0 and standard deviation of 0.1
+
+        # Below affects all offsprings but only at a specified point
+        offspring_crossover[idx, 4] = offspring_crossover[idx, 4] + random_value # Random # is then added to the gene with index 4 of the offspring according to this rule
+
     return offspring_crossover
 
 
-# Use Guassian instead with a mean with 0 and a standard deviation of 0.1
