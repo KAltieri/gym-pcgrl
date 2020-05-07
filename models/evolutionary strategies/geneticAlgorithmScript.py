@@ -14,7 +14,7 @@ def main(equation_inputs, num_weights, sol_per_pop, lowIn, highIn, num_generatio
     pop_size = (sol_per_pop, num_weights)
 
     # Now we create it
-    new_population = numpy.random.uniform(low=-lowIn, high=highIn, size=pop_size)
+    new_population = numpy.random.uniform(low=lowIn, high=highIn, size=pop_size)
 
     # Select the best individuals within our current population as parents for "mating"
     # This'll basically be our fitness function, all done within a for loop
@@ -48,6 +48,12 @@ def main(equation_inputs, num_weights, sol_per_pop, lowIn, highIn, num_generatio
 if __name__ == '__main__':
     # Below are test variables
     # Inputs of the equation.
+
+    # Row (1) = run of gym-pcgrl
+    # Column = step of that run
+    # Cell = reward per step of specific gym-pcgrl run
+
+
     equation_inputs_test = [4, -2, 3.5, 5, -11, -4.7]  # This can be formulated by another script, one that takes in
     # inputs as the completed levels
     # Number of the weights we are looking to optimize.
