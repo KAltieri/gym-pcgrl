@@ -6,6 +6,17 @@ from stable_baselines.common.policies import ActorCriticPolicy, FeedForwardPolic
 from stable_baselines.common.distributions import CategoricalProbabilityDistributionType, ProbabilityDistributionType, CategoricalProbabilityDistribution, ProbabilityDistribution
 from stable_baselines.a2c.utils import conv, linear, conv_to_fc
 
+## Replace backpropagation with neuroevolution
+## Fitness will take total accumulated reward!
+## Evolution modifies the weights, in order for the evolution to get the new set of weights
+## Play for 20 episodes with the weights, use accumulated weights as the reward (fitness), then apply ES to weights with fitness! (use for every single chromosome / agent)
+## Multiple agents / multiple networks can be useful if we want to parallelize
+## Action Items: Examine Cnn1 and create a new Cnn!!!
+## Use narrow representation! Environment itself gives the size of the last layer and the action space (which contains the size of the last layer)!
+## Narrow will give this ot us as an integer. We need to use the same wrapper as they are using, they use a transformation architecture with a dict of objects.
+## crop_image_pcgrl_wrapper -> Feed that into the neuralnet (it will be fed the observation)
+## Sum the reward as total accumulated reward for the fitness
+
 def Cnn1(image, **kwargs):
     activ = tf.nn.relu
     layer_1 = activ(conv(image, 'c1', n_filters=32, filter_size=3, stride=1, init_scale=np.sqrt(2), **kwargs))
