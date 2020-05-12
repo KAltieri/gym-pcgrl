@@ -6,7 +6,7 @@ import geneticAlgorithmSupport
 # Show the best neural network after running for next week + results
 
 # Parameters are: equation_inputs, num_weights, sol_per_pop, low, high, num_generations, num_parents_mating
-def main(equation_inputs, num_weights, sol_per_pop, lowIn, highIn, num_generations, num_parents_mating):
+def geneticAlgorithmMain(equation_inputs, num_weights, sol_per_pop, lowIn, highIn, num_generations, num_parents_mating, reward):
     # Initial population will be defined based on the number of weights, each chromosome
     # In the population will definitely have X genes, one for each weight.
 
@@ -24,7 +24,9 @@ def main(equation_inputs, num_weights, sol_per_pop, lowIn, highIn, num_generatio
     # steps for a number of GENERATIONS (that's why the for loop is there)
 
     for generation in range(num_generations):
-        fitness = geneticAlgorithmSupport.cal_pop_fitness(equation_inputs, new_population)
+        #fitness = geneticAlgorithmSupport.cal_pop_fitness(equation_inputs, new_population)
+        fitness = reward
+
         # First start off by measuring the fitness of each chromosome in the new population
         # Then we need to select the best parents for mating within this population
         parents = geneticAlgorithmSupport.select_mating_pool(new_population, fitness, num_parents_mating)
@@ -42,9 +44,11 @@ def main(equation_inputs, num_weights, sol_per_pop, lowIn, highIn, num_generatio
         new_population[0:parents.shape[0], :] = parents
         new_population[parents.shape[0]:, :] = offspring_mutation
 
+    return new_population
 
 
 
+"""
 if __name__ == '__main__':
     # Below are test variables
     # Inputs of the equation.
@@ -68,5 +72,6 @@ if __name__ == '__main__':
     num_generations_test = 5  # This can be changed
     num_parents_mating_test = 4  # As can this
 
-    main(equation_inputs_test, num_weights_test, sol_per_pop_test, lowIn_test, highIn_test, num_generations_test,
+    geneticAlgorithmMain(equation_inputs_test, num_weights_test, sol_per_pop_test, lowIn_test, highIn_test, num_generations_test,
          num_parents_mating_test)
+"""
