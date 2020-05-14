@@ -16,14 +16,17 @@ class Chromosome:
             'verbose': True
         }
         self.kwargs['cropped_size'] = 28
-        self.crop_size = kwargs.get('cropped_size', 28)
+        self.crop_size = self.kwargs.get('cropped_size', 28)
 
-        self._env = wrappers.CroppedImagePCGRLWrapper('binary-narrow', crop_size, kwargs)
+        print(self.crop_size)
+        print(self.kwargs)
+
+        self._env = wrappers.CroppedImagePCGRLWrapper("binary-narrow", self.crop_size, self.kwargs)
         self._net = net
         self._fitness = 0
 
         self._genes = np.zeros(self._net.conv1.weight.data.size() + self._net.conv2.weight.data.size() + self._net.conv3.weight.data.size() 
-            self._net.fc1.weight.data.size() + self.pi_logits.weight.data.size())
+            + self._net.fc1.weight.data.size() + self.pi_logits.weight.data.size())
 
     def copy(self):
         c = Chromosome()
@@ -58,10 +61,10 @@ class Chromosome:
         return self._fitness
 
 class GA:
-    def __init__(self, popSize, mu, lamda):
+    def __init__(self, popSize, mu, lamda, net):
         self._pop = []
         for i in range(popSize):
-            self._pop.append(Chromosome())
+            self._pop.append(Chromosome(net))
         self.mu = mu
         self.lamda = lamda
 
@@ -69,7 +72,8 @@ class GA:
         for c in self._pop:
             c.fitness(c._env, 20)
 
-        sort(self._pop, lamda c: c._fitness, reverse = True)
+        #sort(self._pop, lamda c: c._fitness, reverse = True) 
+        sort(self._pop, key = c._fitness, reverse = True)
         for i in range(self.mu):
             c = self._pop[i].copy()
             c.mutate()
@@ -81,7 +85,7 @@ class GA:
 
 
 if __name__ == "__main__":
-    net = Net()
+    net = CNN.Net()
     
-    ga = GA(100, 50, 50) #mu = 50, lamda = 50
+    ga = GA(100, 50, 50, net) #mu = 50, lamda = 50
     ga.run(1000)
