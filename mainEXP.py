@@ -18,16 +18,18 @@ class Chromosome:
         self.kwargs['cropped_size'] = 28
         self.crop_size = self.kwargs.get('cropped_size', 28)
 
-        print(self.crop_size)
-        print(self.kwargs)
-
         self._env = wrappers.CroppedImagePCGRLWrapper("binary-narrow-v0", self.crop_size, **self.kwargs)
         self._net = net
         self._fitness = 0
 
-        print(self._net.conv1.weight)
-        self._genes = np.zeros(self._net.conv1.weight.data.size() + self._net.conv2.weight.data.size() + self._net.conv3.weight.data.size() 
-            + self._net.fc1.weight.data.size() + self._net.pi_logits.weight.data.size())
+
+        self._genes = np.zeros(torch.flatten(self._net.conv1.weight).size() + 
+            + torch.flatten(self._net.conv1.bias).size() + torch.flatten(self._net.conv2.weight).size() + torch.flatten(self._net.conv2.bias).size()
+            + torch.flatten(self._net.conv3.weight).size() + torch.flatten(self._net.conv3.bias).size() 
+            + torch.flatten(self._net.fc1.weight).size() + torch.flatten(self._net.fc1.bias).size() 
+            + torch.flatten(self._net.pi_logits.weight).size() + torch.flatten(self._net.pi_logits.bias).size())
+
+        print("done!")
 
     def copy(self):
         c = Chromosome()
