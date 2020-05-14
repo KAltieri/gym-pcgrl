@@ -191,7 +191,7 @@ Define NN
 50000 = net.conv1.weight.data.shape() + ....
 
 net = Net()
-env = gym.make(...)
+env = gym.make(...) OR Wrrappers.CroppedImage('binary-narrow')
 
 class Chromosome:
     def __init__(self):
