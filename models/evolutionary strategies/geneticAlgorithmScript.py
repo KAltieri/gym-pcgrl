@@ -1,6 +1,8 @@
 import numpy
 import geneticAlgorithmSupport
 
+# A population of networks that are flattened weights
+# Do the neuroevolution strategy outside of the class.
 
 # Second approach, natural evolution: https://arxiv.org/pdf/1802.08842.pdf
 # Show the best neural network after running for next week + results
