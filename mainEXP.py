@@ -21,12 +21,13 @@ class Chromosome:
         print(self.crop_size)
         print(self.kwargs)
 
-        self._env = wrappers.CroppedImagePCGRLWrapper("binary-narrow", self.crop_size, self.kwargs)
+        self._env = wrappers.CroppedImagePCGRLWrapper("binary-narrow-v0", self.crop_size, **self.kwargs)
         self._net = net
         self._fitness = 0
 
+        print(self._net.conv1.weight)
         self._genes = np.zeros(self._net.conv1.weight.data.size() + self._net.conv2.weight.data.size() + self._net.conv3.weight.data.size() 
-            + self._net.fc1.weight.data.size() + self.pi_logits.weight.data.size())
+            + self._net.fc1.weight.data.size() + self._net.pi_logits.weight.data.size())
 
     def copy(self):
         c = Chromosome()
