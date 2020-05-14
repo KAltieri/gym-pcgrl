@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import geneticAlgorithmScript
 import numpy
 import math
 
@@ -19,6 +18,7 @@ class Net(nn.Module):
         self.fc1 = nn.Linear(in_features = 28 * 28 * 64, out_features = 512)
         nn.init.orthogonal_(self.fc1.weight, numpy.sqrt(2))
 
+
         #The following two fc layers aren't connected, they are just two separate output branches 
 
         # Pi logits needed for train, more explained on the doc provided
@@ -27,12 +27,6 @@ class Net(nn.Module):
         self.pi_logits = nn.Linear(in_features = 512, out_features = 3)
         nn.init.orthogonal_(self.pi_logits.weight, numpy.sqrt(.01))
 
-        # Second fully connected layer, we are renaming it for ease of convention
-        # DELETE THIS!!!!!!!!!
-        """
-        self.value = nn.Linear(in_features = 512, out_features = 1)
-        nn.init.orthogonal_(self.value.weight, 1)
-        """
 
     def forward(self, obs: numpy.ndarray):
         h: torch.Tensor
@@ -45,12 +39,8 @@ class Net(nn.Module):
 
         action = torch.distributions.categorical.Categorical(logits = self.pi_logits(h))
 
-        # DELETE THIS!!!
-        # value = self.value(h).reshape(-1) # This reshape is just a transpose
-
         return action
 
-net = Net()
 
 ## the output of our evolutionary strategies needs to be equal to the input to the convolutional neural network (maybe)
 ## We need a pool of chromosomes, which wouldn't work in the nested class.
