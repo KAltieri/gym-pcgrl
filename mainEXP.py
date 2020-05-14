@@ -22,14 +22,12 @@ class Chromosome:
         self._net = net
         self._fitness = 0
 
-
-        self._genes = np.zeros(torch.flatten(self._net.conv1.weight).size() + 
-            + torch.flatten(self._net.conv1.bias).size() + torch.flatten(self._net.conv2.weight).size() + torch.flatten(self._net.conv2.bias).size()
-            + torch.flatten(self._net.conv3.weight).size() + torch.flatten(self._net.conv3.bias).size() 
-            + torch.flatten(self._net.fc1.weight).size() + torch.flatten(self._net.fc1.bias).size() 
-            + torch.flatten(self._net.pi_logits.weight).size() + torch.flatten(self._net.pi_logits.bias).size())
-
-        print("done!")
+        self._genes = np.zeros(list(torch.flatten(self._net.conv1.weight).size())[0] + 
+            + list(torch.flatten(self._net.conv1.bias).size())[0] + list(torch.flatten(self._net.conv2.weight).size())[0] 
+            + list(torch.flatten(self._net.conv2.bias).size())[0]
+            + list(torch.flatten(self._net.conv3.weight).size())[0] + list(torch.flatten(self._net.conv3.bias).size())[0]
+            + list(torch.flatten(self._net.fc1.weight).size())[0] + list(torch.flatten(self._net.fc1.bias).size())[0]
+            + list(torch.flatten(self._net.pi_logits.weight).size())[0] + list(torch.flatten(self._net.pi_logits.bias).size())[0], dtype = float)
 
     def copy(self):
         c = Chromosome()
@@ -45,12 +43,29 @@ class Chromosome:
         return
 
     def fitness(self, numberEpisodes):
+        #Conv1 and Bias1, and so on and so forth
+        self._net.conv1.weight.data = torch.from_numpy(np.reshape(self._genes[0:32, :], (32, 1, 1, 1)))
+        self._net.conv1.bias.data = torch.from_numpy(self._genes[32:64, :])
+
+        self._net.conv2.weight.data = torch.from_numpy(np.reshape(self._genes[64:2112, :], (64, 32, 1, 1)))
+        self._net.conv2.bias.data = torch.from_numpy(self._genes[2112: 2176, :])
+
+        self._net.conv3.weight.data = torch.from_numpy(np.reshape(self._genes[2176: 6272, :], (64, 64, 1, 1)))
+        self._net.conv3.bias.data = torch.from_numpy(self._genes[6272:6336, :])
+
+        self._net.fc1.weight.data = torch.from_numpy(np.reshape(self._genes[6336:25696448, :], (512, 50176)))
+        self._net.fc1.bias.data = torch.from_numpy(self._genes[25696448:25696960,:])
+
+        self._net.pi_logits.weight.data = torch.from_numpy(np.reshape(self.genes[25696960: 25698496]), (3, 512))
+        self._net.pi_logits.bias.data = torch.from_numpy(self._genes[25698496: 25698499])
+
+        """               
         self._net.conv1.weight.data = self._genes[0:1, :]
         self._net.conv2.weight.data = self._genes[1:33, :]
         self._net.conv3.weight.data = self._genes[33:97, :]
         self._net.fc1.weight.data = self._genes[97:50273, :]
         self._net.pi_logits.weight.data = self._genes[50273:50785, :]
-
+        """
         #calculate fitness
         totalReward = 0
         for i in range(numberEpisodes):
@@ -58,7 +73,7 @@ class Chromosome:
             done = False
             while not done:
                 action = net.forward(obs)
-                obs, reward, done, _ = self.env.step(action)
+                obs, reward, done, _ = self._env.step(action)
                 totalReward += reward
         self._fitness = totalReward / numberEpisodes
         return self._fitness
@@ -73,7 +88,7 @@ class GA:
 
     def advance(self):
         for c in self._pop:
-            c.fitness(c._env, 20)
+            c.fitness(20)
 
         #sort(self._pop, lamda c: c._fitness, reverse = True) 
         sort(self._pop, key = c._fitness, reverse = True)
