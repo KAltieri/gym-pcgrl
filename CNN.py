@@ -9,6 +9,7 @@ if torch.cuda.is_available():
 else:
     device = torch.device("cpu")
 
+
 class Net(nn.Module):
     def __init__(self, in_channels, map_size):
         super().__init__()
@@ -48,7 +49,6 @@ class Net(nn.Module):
         h = F.relu(self.fc1(h))
         action = torch.distributions.categorical.Categorical(logits = self.pi_logits(h))
 
-        
         #print(action)
         #print()
         #print(action.sample(torch.Size([1,3])))
