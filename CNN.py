@@ -12,7 +12,8 @@ else:
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, 32, kernel_size = 1, stride = 1, padding = 0)
+        #self.conv1 = nn.Conv2d(1, 32, kernel_size = 1, stride = 1, padding = 0)
+        self.conv1 = nn.Conv2d(28, 28, kernel_size = 1, stride = 1, padding = 0)
         # self.pool = nn.MaxPool2d(3,1)
         nn.init.orthogonal_(self.conv1.weight, numpy.sqrt(2))
         self.conv2 = nn.Conv2d(32, 64, kernel_size = 1, stride = 1, padding = 0)
@@ -48,7 +49,11 @@ class Net(nn.Module):
         return action
 
 def obs_to_torch(obs: numpy.ndarray) -> torch.Tensor:
-    return torch.tensor(obs, dtype=torch.float32, device=device)
+    obs = numpy.reshape(obs, (28, 28, 1, 1))
+    obs = numpy.swapaxes(obs, 1, 3)
+    obs = numpy.swapaxes(obs, 3, 2)
+    # float32
+    return torch.tensor(obs, dtype= torch.double, device=device)
 
 """
 
