@@ -22,8 +22,6 @@ class Chromosome:
         self._net = net
         self._fitness = 0
 
-
-
         self._genes = np.zeros(list(torch.flatten(self._net.conv1.weight).size())[0] + 
             + list(torch.flatten(self._net.conv1.bias).size())[0] + list(torch.flatten(self._net.conv2.weight).size())[0] 
             + list(torch.flatten(self._net.conv2.bias).size())[0]
@@ -71,11 +69,16 @@ class Chromosome:
         #calculate fitness
         totalReward = 0
         for i in range(numberEpisodes):
+
             obs = self._env.reset()
+
+            # Reshape necessary to fit the input + need to convert to a tensor obj
             obs = np.reshape(obs, (32,32,1,1))
+            obsNew = torch.from_numpy(obs)
+
             done = False
             while not done:
-                action = net.forward(obs)
+                action = net.forward(obsNew)
                 obs, reward, done, _ = self._env.step(action)
                 totalReward += reward
         self._fitness = totalReward / numberEpisodes

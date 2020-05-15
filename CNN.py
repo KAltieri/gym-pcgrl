@@ -31,7 +31,7 @@ class Net(nn.Module):
     def forward(self, obs: numpy.ndarray):
         h: torch.Tensor
 
-        h = F.relu(self.conv1(torch.from_numpy(obs)))
+        h = F.relu(self.conv1(obs))
         h = F.relu(self.conv2(h))
         h = F.relu(self.conv3(h))
         h = h.reshape((-1, 28 * 28 * 64))
