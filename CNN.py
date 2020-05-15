@@ -49,12 +49,14 @@ class Net(nn.Module):
         action = torch.distributions.categorical.Categorical(logits = self.pi_logits(h))
 
         
-        print(action)
-        print()
-        print(action.sample(torch.Size([1,3])))
-        print()
+        #print(action)
+        #print()
+        #print(action.sample(torch.Size([1,3])))
+        #print()
 
-        return action
+        actionGet = action.sample()
+
+        return actionGet
 
     def gene_size(self):
         genes = np.zeros(list(torch.flatten(self.conv1.weight).size())[0] + list(torch.flatten(self.conv1.bias).size())[0]

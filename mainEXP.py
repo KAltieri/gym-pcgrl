@@ -74,15 +74,18 @@ class Chromosome:
         totalReward = 0
         for i in range(numberEpisodes):
             obs = self._env.reset()
-            print(obs.shape)
+            #print(obs.shape)
             done = False
             while not done:
                 action = self._net.forward(CNN.obs_to_torch(obs))
                 obs, reward, done, _ = self._env.step(action)
                 totalReward += reward
         self._fitness = totalReward / numberEpisodes
-        print(self._fitness)
+        #print(self._fitness)
         return self._fitness
+
+def sortfitness(popidx):
+    return popidx._fitness
 
 class GA:
     def __init__(self, popSize, mu, lamda):
@@ -95,22 +98,27 @@ class GA:
 
     def advance(self):
         for c in self._pop:
-            c.fitness(20)
+            #c.fitness(20)
+            c.fitness(2)
+        print("done fitness")
 
         #sort(self._pop, lamda c: c._fitness, reverse = True)
-        sort(self._pop, key = c._fitness, reverse = True)
+        sorted(self._pop, key = sortfitness, reverse = True)
         for i in range(self.mu):
             c = self._pop[i].copy()
-            c.mutate()
+            c.mutation()
             self._pop[self.lamda + i] = c
+        print("done mutation")
 
     def run(self, generations):
         for i in range(generations):
             self.advance()
+            print("done generation")
 
 
 if __name__ == "__main__":
 
 
-    ga = GA(100, 50, 50) #mu = 50, lamda = 50
+    #ga = GA(100, 50, 50) #mu = 50, lamda = 50
+    ga = GA(4, 2, 2)
     ga.run(1000)
