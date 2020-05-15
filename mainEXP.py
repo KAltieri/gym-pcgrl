@@ -88,7 +88,6 @@ def sortfitness(popidx):
     return popidx._fitness
 
 def averageLst(lst): 
-
     nlst = lst[:10]
     count = 0
     for i in range(nlst):
