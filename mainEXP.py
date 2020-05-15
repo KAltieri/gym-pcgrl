@@ -10,7 +10,7 @@ import geneticAlgorithmScript
 import CNN
 
 class Chromosome:
-    def __init__(self, net):
+    def __init__(self):
         self.kwargs = {
             'change_percentage': 0.4,
             'verbose': True
@@ -18,19 +18,21 @@ class Chromosome:
         # 28 possibly
         self.kwargs['cropped_size'] = 28
         self.crop_size = self.kwargs.get('cropped_size', 28)
+        self.agents = 1
+        self.processes = 1
 
         self._env = wrappers.CroppedImagePCGRLWrapper("binary-narrow-v0", self.crop_size, **self.kwargs)
-        self._obs = np.zeros
-        self._net = net
+
+        n_actions = self._env.action_space.n
+
+        #self._obs = np.zeros((self.agents, self.processes, self.crop_size, self.crop_size), dtype = np.uint8)
+        #self._obs = np.zeros
+        self._obs = np.zeros((1, 28, 28, 1), dtype = np.uint8)
+        self._net = CNN.Net(self._obs.shape[-1], self.crop_size, n_actions)
         self._fitness = 0
 
-        self._genes = np.zeros(list(torch.flatten(self._net.conv1.weight).size())[0] + 
-            + list(torch.flatten(self._net.conv1.bias).size())[0] + list(torch.flatten(self._net.conv2.weight).size())[0] 
-            + list(torch.flatten(self._net.conv2.bias).size())[0]
-            + list(torch.flatten(self._net.conv3.weight).size())[0] + list(torch.flatten(self._net.conv3.bias).size())[0]
-            + list(torch.flatten(self._net.fc1.weight).size())[0] + list(torch.flatten(self._net.fc1.bias).size())[0]
-            + list(torch.flatten(self._net.pi_logits.weight).size())[0] + list(torch.flatten(self._net.pi_logits.bias).size())[0])
-        
+        self._genes = self._net.gene_size()
+
 
     def copy(self):
         c = Chromosome()
@@ -62,7 +64,7 @@ class Chromosome:
         self._net.pi_logits.weight.data = torch.from_numpy(np.reshape(self._genes[25696960: 25698496], (3, 512)))
         self._net.pi_logits.bias.data = torch.from_numpy(self._genes[25698496: 25698499])
 
-        """               
+        """
         self._net.conv1.weight.data = self._genes[0:1, :]
         self._net.conv2.weight.data = self._genes[1:33, :]
         self._net.conv3.weight.data = self._genes[33:97, :]
@@ -82,10 +84,10 @@ class Chromosome:
         return self._fitness
 
 class GA:
-    def __init__(self, popSize, mu, lamda, net):
+    def __init__(self, popSize, mu, lamda):
         self._pop = []
         for i in range(popSize):
-            self._pop.append(Chromosome(net))
+            self._pop.append(Chromosome())
         self.mu = mu
         self.lamda = lamda
 
@@ -93,7 +95,7 @@ class GA:
         for c in self._pop:
             c.fitness(20)
 
-        #sort(self._pop, lamda c: c._fitness, reverse = True) 
+        #sort(self._pop, lamda c: c._fitness, reverse = True)
         sort(self._pop, key = c._fitness, reverse = True)
         for i in range(self.mu):
             c = self._pop[i].copy()
@@ -108,7 +110,5 @@ class GA:
 if __name__ == "__main__":
 
 
-    net = CNN.Net()
-    
-    ga = GA(100, 50, 50, net) #mu = 50, lamda = 50
+    ga = GA(100, 50, 50) #mu = 50, lamda = 50
     ga.run(1000)
