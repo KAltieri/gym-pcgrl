@@ -95,15 +95,17 @@ class GA:
         print("done init")
         self.mu = mu
         self.lamda = lamda
+        self.avgFitness = []
 
     def advance(self):
         for c in self._pop:
-            #c.fitness(20)
-            c.fitness(2)
+            c.fitness(20)
+            #c.fitness(2)
         print("done fitness")
 
         #sort(self._pop, lamda c: c._fitness, reverse = True)
         sorted(self._pop, key = sortfitness, reverse = True)
+        self.avgFitness.append(self._pop[:10]._fitness)
         for i in range(self.mu):
             c = self._pop[i].copy()
             c.mutation()
@@ -114,11 +116,13 @@ class GA:
         for i in range(generations):
             self.advance()
             print("done generation")
+        df = pd.DataFrame(avgFitness)
+        df.to_csv(index=False)
 
 
 if __name__ == "__main__":
 
 
-    #ga = GA(100, 50, 50) #mu = 50, lamda = 50
-    ga = GA(4, 2, 2)
+    ga = GA(100, 50, 50) #mu = 50, lamda = 50
+    #ga = GA(4, 2, 2)
     ga.run(1000)

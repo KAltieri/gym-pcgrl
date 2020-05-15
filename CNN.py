@@ -4,10 +4,11 @@ import torch.nn.functional as F
 import numpy as np
 import math
 
-if torch.cuda.is_available():
-    device = torch.device("cuda:0")
-else:
-    device = torch.device("cpu")
+#if torch.cuda.is_available():
+#    device = torch.device("cuda:0")
+#else:
+#    device = torch.device("cpu")
+device = torch.device("cpu")
 
 class Net(nn.Module):
     def __init__(self, in_channels, map_size):
