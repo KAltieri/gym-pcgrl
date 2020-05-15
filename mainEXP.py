@@ -87,6 +87,15 @@ class Chromosome:
 def sortfitness(popidx):
     return popidx._fitness
 
+def averageLst(lst): 
+
+    nlst = lst[:10]
+    count = 0
+    for i in range(nlst):
+        count += nlst[i]._fitness
+
+    return count / len(nlst) 
+
 class GA:
     def __init__(self, popSize, mu, lamda):
         self._pop = []
@@ -105,7 +114,7 @@ class GA:
 
         #sort(self._pop, lamda c: c._fitness, reverse = True)
         sorted(self._pop, key = sortfitness, reverse = True)
-        self.avgFitness.append(self._pop[:10]._fitness)
+        self.avgFitness.append(averageLstParse(self._pop))
         for i in range(self.mu):
             c = self._pop[i].copy()
             c.mutation()
@@ -117,7 +126,7 @@ class GA:
             self.advance()
             print("done generation")
         df = pd.DataFrame(avgFitness)
-        df.to_csv(index=False)
+        df.to_csv('output.csv', index=False)
 
 
 if __name__ == "__main__":
@@ -125,4 +134,4 @@ if __name__ == "__main__":
 
     #ga = GA(100, 50, 50) #mu = 50, lamda = 50
     ga = GA(2, 1, 1)
-    ga.run(1000)
+    ga.run(2)
