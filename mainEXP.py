@@ -89,7 +89,7 @@ def sortfitness(popidx):
     return popidx._fitness
 
 def averageLstParse(lst): 
-    nlst = lst[:10]
+    nlst = lst[:1]
     count = 0
     for i in range(len(nlst)):
         count += nlst[i]._fitness
@@ -142,43 +142,43 @@ if __name__ == "__main__":
     allAvgFitness = []
     #ga = GA(100, 50, 50) #mu = 50, lamda = 50
     ga1= GA(10, 5, 5)
-    allAvgFitness += ga1.run(1000)
+    allAvgFitness.append(ga1.run(1000))
     del ga1
 
     ga2 = GA(10, 5, 5)
-    allAvgFitness += ga2.run(1000)
+    allAvgFitness.append(ga2.run(1000))
     del ga2
 
     ga3 = GA(10, 5, 5)
-    allAvgFitness += ga3.run(1000)
+    allAvgFitness.append(ga3.run(1000))
     del ga3
 
     ga4 = GA(10, 5, 5)
-    allAvgFitness += ga4.run(1000)
+    allAvgFitness.append(ga4.run(1000))
     del ga4
 
     ga5 = GA(10, 5, 5)
-    allAvgFitness += ga5.run(1000)
+    allAvgFitness.append([ga5.run(1000))
     del ga5
 
     ga6 = GA(10, 5, 5)
-    allAvgFitness += ga6.run(1000)
+    allAvgFitness.append(ga6.run(1000))
     del ga6
 
     ga7 = GA(10, 5, 5)
-    allAvgFitness += ga7.run(1000)
+    allAvgFitness.append(ga7.run(1000))
     del ga7
 
     ga8 = GA(10, 5, 5)
-    allAvgFitness += ga8.run(1000)
+    allAvgFitness.append(ga8.run(1000))
     del ga8
 
     ga9 = GA(10, 5, 5)
-    allAvgFitness += ga9.run(1000)
+    allAvgFitness.append(ga9.run(1000))
     del ga9
 
     ga10 = GA(10, 5, 5)
-    allAvgFitness += ga10.run(1000)
+    allAvgFitness.append(ga10.run(1000))
     del ga10
 
     df = pd.DataFrame(allAvgFitness)
