@@ -77,10 +77,11 @@ class Chromosome:
             obs = self._env.reset()
             done = False
             while not done:
-                action = net.forward(CNN.obs_to_torch(obs))
+                action = self._net.forward(CNN.obs_to_torch(obs))
                 obs, reward, done, _ = self._env.step(action)
                 totalReward += reward
         self._fitness = totalReward / numberEpisodes
+        print(self._fitness)
         return self._fitness
 
 class GA:

@@ -14,6 +14,7 @@ class Net(nn.Module):
         super().__init__()
         self.map_size = map_size
         #print(in_channels);
+        print(in_channels);
         self.conv1 = nn.Conv2d(in_channels=in_channels, out_channels=32, kernel_size=1, stride=1, padding=0)
         nn.init.orthogonal_(self.conv1.weight, np.sqrt(2))
 
@@ -28,7 +29,7 @@ class Net(nn.Module):
 
         #self.lin = nn.Linear(in_features=map_size * map_size * 64,out_features=512)
         #nn.init.orthogonal_(self.lin.weight, np.sqrt(2))
-        
+
         # Pi logits needed for train, more explained on the doc provided
         # A fully connected layer to get logits for π
         # Linear values that can be transformed into probabilities for actions
@@ -57,9 +58,10 @@ class Net(nn.Module):
         return genes
 
 def obs_to_torch(obs: np.ndarray) -> torch.Tensor:
-    obs = np.swapaxes(obs, 1, 3)
+    #print(obs)
+    #obs = np.swapaxes(obs, 1, 3)
     # print("after first",obs.shape)
-    obs = np.swapaxes(obs, 3, 2)
+    #obs = np.swapaxes(obs, 3, 2)
     # float32
     return torch.tensor(obs, dtype= torch.float32, device=device)
 
