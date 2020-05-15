@@ -55,8 +55,9 @@ class Net(nn.Module):
         #print()
 
         actionGet = action.sample()
+        a = actionGet.cpu().data.numpy()
 
-        return actionGet
+        return a[0]
 
     def gene_size(self):
         genes = np.zeros(list(torch.flatten(self.conv1.weight).size())[0] + list(torch.flatten(self.conv1.bias).size())[0]

@@ -120,5 +120,5 @@ if __name__ == "__main__":
 
 
     #ga = GA(100, 50, 50) #mu = 50, lamda = 50
-    ga = GA(4, 2, 2)
+    ga = GA(2, 1, 1)
     ga.run(1000)
