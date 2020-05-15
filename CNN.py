@@ -19,7 +19,7 @@ class Net(nn.Module):
         nn.init.orthogonal_(self.fc1.weight, numpy.sqrt(2))
 
 
-        #The following two fc layers aren't connected, they are just two separate output branches 
+        #The following two fc layers aren't connected, they are just two separate output branches
 
         # Pi logits needed for train, more explained on the doc provided
         # A fully connected layer to get logits for π
@@ -30,7 +30,7 @@ class Net(nn.Module):
 
     def forward(self, obs: numpy.ndarray):
         h: torch.Tensor
-
+        h.set_default_dtype(torch.double)
         h = F.relu(self.conv1(torch.from_numpy(obs)))
         h = F.relu(self.conv2(h))
         h = F.relu(self.conv3(h))
