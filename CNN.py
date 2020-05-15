@@ -56,33 +56,6 @@ class Net(nn.Module):
 
         return a[0]
 
-    def gene_size(self):
-        genes = np.zeros(list(torch.flatten(self.conv1.weight).size())[0] + list(torch.flatten(self.conv1.bias).size())[0]
-            + list(torch.flatten(self.conv2.weight).size())[0] + list(torch.flatten(self.conv2.bias).size())[0]
-            + list(torch.flatten(self.conv3.weight).size())[0] + list(torch.flatten(self.conv3.bias).size())[0]
-            + list(torch.flatten(self.fc1.weight).size())[0] + list(torch.flatten(self.fc1.bias).size())[0]
-            + list(torch.flatten(self.pi_logits.weight).size())[0] + list(torch.flatten(self.pi_logits.bias).size())[0])
-
-        """
-        print(self.conv1.weight.size())
-        print(self.conv1.bias.size())
-
-        print(self.conv2.weight.size())
-        print(self.conv2.bias.size())
-
-        print(self.conv3.weight.size())
-        print(self.conv3.bias.size())
-
-        print(self.fc1.weight.size())
-        print(self.fc1.bias.size())
-
-        print(self.pi_logits.weight.size())
-        print(self.pi_logits.bias.size())
-
-        print(genes.shape)
-        """
-
-        return genes
 
 def obs_to_torch(obs: np.ndarray) -> torch.Tensor:
     #print(obs)
@@ -93,75 +66,3 @@ def obs_to_torch(obs: np.ndarray) -> torch.Tensor:
     # float32
     return torch.tensor(obs, dtype= torch.double, device=device)
 
-"""
-
-Define NN
-50000 = net.conv1.weight.data.shape() + ....
-
-net = Net()
-env = gym.make(...) OR Wrrappers.CroppedImage('binary-narrow')
-
-class Chromosome:
-    def __init__(self):
-        self._genes = #50000 np array
-        self._fitness = 0
-
-    def copy(self):
-        c = Chromosome()
-        c._genes = self._genes.copy()
-        return c
-
-    def mutation(self):
-        self.genes += np.guassian(size, mean=0, std=0.1)
-
-    def fitness(self, env, net, episode_num):
-        #initialize network based on the chromosome
-        net.conv1.weight.data = self._genes[0:400]
-        net.conv2.weight.data = self._genes[400:800]
-        ..
-        ..
-        ..
-        #calculate fitness
-        totalReward = 0
-        for i in range(episode_num):
-            obs = env.reset()
-            done = false
-            while not done:
-                action = net.forward(obs)
-                obs, reward, done, _ = env.step(action)
-                totalReward += reward
-        self._fitness = totalReward / (numberEpisode * 1.0)
-        return self._fitness
-
-
-
-class GA:
-    def __init__(self, popSize, mu, lamda):
-        self._pop = []
-        for i in range(popSize):
-            self._pop.append(Chromosome())
-
-        self.mu = mu
-        self.lamda = lamda
-
-    def advance(self):
-        for c in self._pop:
-            #net defined outside
-            c.fitness(env, net, 20)
-
-        sort(self._pop, lamda c: c._fitness, reverse = True)
-        for i in range(self.mu):
-            c = self._pop[i].copy
-            c = c.mutate()
-            self._pop[self.lamda + 1] = c
-
-    def run(self, generations):
-        for i in range(generations):
-            self.advance()
-
-
-ga = GA(100, 50, 50)
-ga,run(1000)
-
-
-"""

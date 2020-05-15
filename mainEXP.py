@@ -31,7 +31,12 @@ class Chromosome:
         self._net = CNN.Net(1, self.crop_size)
         self._fitness = 0
 
-        self._genes = self._net.gene_size()
+        self._genes = np.zeros(list(torch.flatten(self._net.conv1.weight).size())[0] + list(torch.flatten(self._net.conv1.bias).size())[0]
+            + list(torch.flatten(self._net.conv2.weight).size())[0] + list(torch.flatten(self._net.conv2.bias).size())[0]
+            + list(torch.flatten(self._net.conv3.weight).size())[0] + list(torch.flatten(self._net.conv3.bias).size())[0]
+            + list(torch.flatten(self._net.fc1.weight).size())[0] + list(torch.flatten(self._net.fc1.bias).size())[0]
+            + list(torch.flatten(self._net.pi_logits.weight).size())[0] + list(torch.flatten(self._net.pi_logits.bias).size())[0])
+
 
 
     def copy(self):
@@ -40,11 +45,10 @@ class Chromosome:
         return c
 
     def mutation(self):
-        for idx in range(self._genes.shape[0]):
-            random_value = np.random.normal(0, 0.1, 1)
-            random_int = np.random.randint(0, 10)
-            if random_int == 1:
-                self._genes[idx] += random_value
+        idxlist = random.sample(range(0, self._genes.shape[0]), self._genes.shape[0] / 10)
+        for idx in idxlist:
+            random_value = np.random.normal(0, 0.1, 1) #mean of 0 and std deviation of 0.1
+            self._genes[idx] += random_value
         return
 
     def fitness(self, numberEpisodes):
@@ -63,6 +67,8 @@ class Chromosome:
 
         self._net.pi_logits.weight.data = torch.from_numpy(np.reshape(self._genes[25696960: 25698496], (3, 512)))
         self._net.pi_logits.bias.data = torch.from_numpy(self._genes[25698496: 25698499])
+
+        
 
         """
         self._net.conv1.weight.data = self._genes[0:1, :]
@@ -116,7 +122,7 @@ class GA:
 
     def advance(self):
         for c in self._pop:
-            c.fitness(20)
+            c.fitness(10)
             #c.fitness(2)
         print("done fitness")
 
@@ -139,6 +145,7 @@ class GA:
 
 if __name__ == "__main__":
 
+    # 1 generation = 45 minutes
     allAvgFitness = []
     #ga = GA(100, 50, 50) #mu = 50, lamda = 50
     ga1= GA(10, 5, 5)
@@ -158,7 +165,7 @@ if __name__ == "__main__":
     del ga4
 
     ga5 = GA(10, 5, 5)
-    allAvgFitness.append([ga5.run(1000))
+    allAvgFitness.append(ga5.run(1000))
     del ga5
 
     ga6 = GA(10, 5, 5)
