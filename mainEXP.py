@@ -4,6 +4,7 @@ import torch.nn.functional as F
 import numpy as np
 import math
 import gym
+import random
 from gym_pcgrl import wrappers
 
 import geneticAlgorithmScript
@@ -43,9 +44,8 @@ class Chromosome:
         c = Chromosome()
         c._genes = self._genes.copy()
         return c
-
     def mutation(self):
-        idxlist = random.sample(range(0, self._genes.shape[0]), self._genes.shape[0] / 10)
+        idxlist = random.sample(range(self._genes.shape[0]), self._genes.shape[0] // 10)
         for idx in idxlist:
             random_value = np.random.normal(0, 0.1, 1) #mean of 0 and std deviation of 0.1
             self._genes[idx] += random_value
@@ -148,45 +148,65 @@ if __name__ == "__main__":
     # 1 generation = 45 minutes
     allAvgFitness = []
     #ga = GA(100, 50, 50) #mu = 50, lamda = 50
-    ga1= GA(10, 5, 5)
-    allAvgFitness.append(ga1.run(1000))
+    ga1= GA(4, 2, 2)
+    allAvgFitness.append(ga1.run(15))
     del ga1
 
-    ga2 = GA(10, 5, 5)
-    allAvgFitness.append(ga2.run(1000))
+    print("done ga1")
+
+    ga2 = GA(4, 2, 2)
+    allAvgFitness.append(ga2.run(15))
     del ga2
 
-    ga3 = GA(10, 5, 5)
-    allAvgFitness.append(ga3.run(1000))
+    print("done ga2")
+
+    ga3 = GA(4, 2, 2)
+    allAvgFitness.append(ga3.run(15))
     del ga3
 
-    ga4 = GA(10, 5, 5)
-    allAvgFitness.append(ga4.run(1000))
+    print("done ga3")
+
+    ga4 = GA(4, 2, 2)
+    allAvgFitness.append(ga4.run(15))
     del ga4
 
-    ga5 = GA(10, 5, 5)
-    allAvgFitness.append(ga5.run(1000))
+    print("done ga4")
+
+    ga5 = GA(4, 2, 2)
+    allAvgFitness.append(ga5.run(15))
     del ga5
 
-    ga6 = GA(10, 5, 5)
-    allAvgFitness.append(ga6.run(1000))
+    print("done ga5")
+
+    ga6 = GA(4, 2, 2)
+    allAvgFitness.append(ga6.run(15))
     del ga6
 
-    ga7 = GA(10, 5, 5)
-    allAvgFitness.append(ga7.run(1000))
+    print("done ga6")
+
+    ga7 = GA(4, 2, 2)
+    allAvgFitness.append(ga7.run(15))
     del ga7
 
-    ga8 = GA(10, 5, 5)
-    allAvgFitness.append(ga8.run(1000))
+    print("done ga7")
+
+    ga8 = GA(4, 2, 2)
+    allAvgFitness.append(ga8.run(15))
     del ga8
 
-    ga9 = GA(10, 5, 5)
-    allAvgFitness.append(ga9.run(1000))
+    print("done ga8")
+
+    ga9 = GA(4, 2, 2)
+    allAvgFitness.append(ga9.run(15))
     del ga9
 
-    ga10 = GA(10, 5, 5)
-    allAvgFitness.append(ga10.run(1000))
+    print("done ga9")
+
+    ga10 = GA(4, 2, 2)
+    allAvgFitness.append(ga10.run(15))
     del ga10
+
+    print("DONE!!!")
 
     df = pd.DataFrame(allAvgFitness)
     df.to_csv('output.csv', index=False)
