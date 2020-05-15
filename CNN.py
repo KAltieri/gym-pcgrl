@@ -4,10 +4,15 @@ import torch.nn.functional as F
 import numpy
 import math
 
+if torch.cuda.is_available():
+    device = torch.device("cuda:0")
+else:
+    device = torch.device("cpu")
+
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(32, 32, kernel_size = 1, stride = 1, padding = 0)
+        self.conv1 = nn.Conv2d(1, 32, kernel_size = 1, stride = 1, padding = 0)
         # self.pool = nn.MaxPool2d(3,1)
         nn.init.orthogonal_(self.conv1.weight, numpy.sqrt(2))
         self.conv2 = nn.Conv2d(32, 64, kernel_size = 1, stride = 1, padding = 0)
@@ -19,7 +24,7 @@ class Net(nn.Module):
         nn.init.orthogonal_(self.fc1.weight, numpy.sqrt(2))
 
 
-        #The following two fc layers aren't connected, they are just two separate output branches 
+        #The following two fc layers aren't connected, they are just two separate output branches
 
         # Pi logits needed for train, more explained on the doc provided
         # A fully connected layer to get logits for π
@@ -28,10 +33,11 @@ class Net(nn.Module):
         nn.init.orthogonal_(self.pi_logits.weight, numpy.sqrt(.01))
 
 
-    def forward(self, obs: numpy.ndarray):
+    def forward(self, obs):
         h: torch.Tensor
 
         h = F.relu(self.conv1(obs))
+        
         h = F.relu(self.conv2(h))
         h = F.relu(self.conv3(h))
         h = h.reshape((-1, 28 * 28 * 64))
@@ -40,6 +46,9 @@ class Net(nn.Module):
         action = torch.distributions.categorical.Categorical(logits = self.pi_logits(h))
 
         return action
+
+def obs_to_torch(obs: numpy.ndarray) -> torch.Tensor:
+    return torch.tensor(obs, dtype=torch.float32, device=device)
 
 """
 
