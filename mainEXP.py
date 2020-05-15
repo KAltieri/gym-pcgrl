@@ -8,6 +8,7 @@ from gym_pcgrl import wrappers
 
 import geneticAlgorithmScript
 import CNN
+import pandas as pd
 
 class Chromosome:
     def __init__(self):
