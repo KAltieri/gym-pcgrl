@@ -25,10 +25,9 @@ class Chromosome:
 
         n_actions = self._env.action_space.n
 
-        #self._obs = np.zeros((self.agents, self.processes, self.crop_size, self.crop_size), dtype = np.uint8)
-        #self._obs = np.zeros
-        self._obs = np.zeros((1, 28, 28, 1), dtype = np.uint8)
-        self._net = CNN.Net(self._obs.shape[-1], self.crop_size, n_actions)
+        #self._obs = np.zeros((1, 28, 28, 1), dtype = np.uint8)
+        #self._net = CNN.Net(self._obs.shape[-1], self.crop_size, n_actions)
+        self._net = CNN.Net(1, self.crop_size)
         self._fitness = 0
 
         self._genes = self._net.gene_size()
@@ -75,6 +74,7 @@ class Chromosome:
         totalReward = 0
         for i in range(numberEpisodes):
             obs = self._env.reset()
+            print(obs.shape)
             done = False
             while not done:
                 action = self._net.forward(CNN.obs_to_torch(obs))
@@ -89,6 +89,7 @@ class GA:
         self._pop = []
         for i in range(popSize):
             self._pop.append(Chromosome())
+        print("done init")
         self.mu = mu
         self.lamda = lamda
 

@@ -10,11 +10,11 @@ else:
     device = torch.device("cpu")
 
 class Net(nn.Module):
-    def __init__(self, in_channels, map_size, out_length):
+    def __init__(self, in_channels, map_size):
         super().__init__()
         self.map_size = map_size
         #print(in_channels);
-        print(in_channels);
+        #print(in_channels);
         self.conv1 = nn.Conv2d(in_channels=in_channels, out_channels=32, kernel_size=1, stride=1, padding=0)
         nn.init.orthogonal_(self.conv1.weight, np.sqrt(2))
 
@@ -45,7 +45,14 @@ class Net(nn.Module):
         h = F.relu(self.conv3(h))
         h = h.reshape((-1, self.map_size * self.map_size * 64))
 
+        h = F.relu(self.fc1(h))
         action = torch.distributions.categorical.Categorical(logits = self.pi_logits(h))
+
+        
+        print(action)
+        print()
+        print(action.sample(torch.Size([1,3])))
+        print()
 
         return action
 
@@ -55,15 +62,36 @@ class Net(nn.Module):
             + list(torch.flatten(self.conv3.weight).size())[0] + list(torch.flatten(self.conv3.bias).size())[0]
             + list(torch.flatten(self.fc1.weight).size())[0] + list(torch.flatten(self.fc1.bias).size())[0]
             + list(torch.flatten(self.pi_logits.weight).size())[0] + list(torch.flatten(self.pi_logits.bias).size())[0])
+
+        """
+        print(self.conv1.weight.size())
+        print(self.conv1.bias.size())
+
+        print(self.conv2.weight.size())
+        print(self.conv2.bias.size())
+
+        print(self.conv3.weight.size())
+        print(self.conv3.bias.size())
+
+        print(self.fc1.weight.size())
+        print(self.fc1.bias.size())
+
+        print(self.pi_logits.weight.size())
+        print(self.pi_logits.bias.size())
+
+        print(genes.shape)
+        """
+
         return genes
 
 def obs_to_torch(obs: np.ndarray) -> torch.Tensor:
     #print(obs)
-    #obs = np.swapaxes(obs, 1, 3)
+    obs = np.reshape(obs, (28, 28, 1, 1))
+    obs = np.swapaxes(obs, 1, 3)
     # print("after first",obs.shape)
-    #obs = np.swapaxes(obs, 3, 2)
+    obs = np.swapaxes(obs, 3, 2)
     # float32
-    return torch.tensor(obs, dtype= torch.float32, device=device)
+    return torch.tensor(obs, dtype= torch.double, device=device)
 
 """
 
