@@ -7,7 +7,7 @@ import math
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, 32, kernel_size = 1, stride = 1, padding = 0)
+        self.conv1 = nn.Conv2d(32, 32, kernel_size = 1, stride = 1, padding = 0)
         # self.pool = nn.MaxPool2d(3,1)
         nn.init.orthogonal_(self.conv1.weight, numpy.sqrt(2))
         self.conv2 = nn.Conv2d(32, 64, kernel_size = 1, stride = 1, padding = 0)
@@ -31,7 +31,7 @@ class Net(nn.Module):
     def forward(self, obs: numpy.ndarray):
         h: torch.Tensor
 
-        h = F.relu(self.conv1(obs))
+        h = F.relu(self.conv1(torch.from_numpy(obs)))
         h = F.relu(self.conv2(h))
         h = F.relu(self.conv3(h))
         h = h.reshape((-1, 28 * 28 * 64))
