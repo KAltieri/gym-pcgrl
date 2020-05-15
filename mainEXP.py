@@ -108,8 +108,8 @@ class GA:
 
     def advance(self):
         for c in self._pop:
-            #c.fitness(20)
-            c.fitness(2)
+            c.fitness(20)
+            #c.fitness(2)
         print("done fitness")
 
         #sort(self._pop, lamda c: c._fitness, reverse = True)
@@ -125,7 +125,7 @@ class GA:
         for i in range(generations):
             self.advance()
             print("done generation")
-        df = pd.DataFrame(avgFitness)
+        df = pd.DataFrame(self.avgFitness)
         df.to_csv('output.csv', index=False)
 
 
@@ -133,5 +133,5 @@ if __name__ == "__main__":
 
 
     #ga = GA(100, 50, 50) #mu = 50, lamda = 50
-    ga = GA(2, 1, 1)
-    ga.run(2)
+    ga = GA(100, 50, 50)
+    ga.run(1000)
