@@ -87,10 +87,10 @@ class Chromosome:
 def sortfitness(popidx):
     return popidx._fitness
 
-def averageLst(lst): 
+def averageLstParse(lst): 
     nlst = lst[:10]
     count = 0
-    for i in range(nlst):
+    for i in range(len(nlst)):
         count += nlst[i]._fitness
 
     return count / len(nlst) 
@@ -107,8 +107,8 @@ class GA:
 
     def advance(self):
         for c in self._pop:
-            c.fitness(20)
-            #c.fitness(2)
+            #c.fitness(20)
+            c.fitness(2)
         print("done fitness")
 
         #sort(self._pop, lamda c: c._fitness, reverse = True)
