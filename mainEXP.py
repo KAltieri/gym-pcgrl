@@ -136,8 +136,6 @@ class GA:
         #self.save_path = 'models/{}/{}'.format(game,representation)
         #self.save_path = 'runs/{}/{}/'.format("binary","narrow")
         self.save_path = 'runs/'
-        self.last = False
-        print(self.save_path)
 
     def __delete__(self, instance):
         print("deleted in descriptor object")
@@ -145,6 +143,7 @@ class GA:
         del self.avgFitness
         del self.mu
         del self.lamda
+        del self.save_path
         return
 
     def advance(self):
@@ -156,6 +155,7 @@ class GA:
         #sort(self._pop, lamda c: c._fitness, reverse = True)
         sorted(self._pop, key = sortfitness, reverse = True)
         self.avgFitness.append(averageLstParse(self._pop))
+        #self.avgFitness.append(self._pop[0]._fitness)
         save_models(self._pop[0]._net, self.save_path, epoch = 0, update = 0)
         for i in range(self.mu):
             c = self._pop[i].copy()
@@ -165,7 +165,6 @@ class GA:
 
     def run(self, generations):
         for i in range(generations):
-            self.last = (i == generations-1)
             self.advance()
             print("done generation")
         return self.avgFitness
@@ -177,8 +176,8 @@ if __name__ == "__main__":
     # 1 generation = 45 minutes
     allAvgFitness = []
     #ga = GA(100, 50, 50) #mu = 50, lamda = 50
-    ga1= GA(2, 1, 1)
-    allAvgFitness.append(ga1.run(1))
+    ga1= GA(4, 2, 2)
+    allAvgFitness.append(ga1.run(300))
     del ga1
 
     print("DONE!!!")
