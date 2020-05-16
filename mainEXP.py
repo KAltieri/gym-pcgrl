@@ -68,7 +68,7 @@ class Chromosome:
         self._net.pi_logits.weight.data = torch.from_numpy(np.reshape(self._genes[25696960: 25698496], (3, 512)))
         self._net.pi_logits.bias.data = torch.from_numpy(self._genes[25698496: 25698499])
 
-        
+
 
         """
         self._net.conv1.weight.data = self._genes[0:1, :]
@@ -94,13 +94,35 @@ class Chromosome:
 def sortfitness(popidx):
     return popidx._fitness
 
-def averageLstParse(lst): 
+def averageLstParse(lst):
     nlst = lst[:1]
     count = 0
     for i in range(len(nlst)):
         count += nlst[i]._fitness
 
-    return count / len(nlst) 
+    return count / len(nlst)
+
+def save_models(model, path, epoch = 0, update = 0):
+    print('Saving 1 model to {}'.format(path))
+    save_dict = {'model_state_dict': model.state_dict()}
+    if epoch:
+        save_dict['epoch'] = epoch
+    if update:
+        save_dict['update'] = update
+    print(path + 'model')
+    torch.save(save_dict, path + 'model')
+
+
+def load_model(path, in_channels, map_size, out_length):
+    model = CNN.Net(in_channels, map_size).double()
+    checkpoint = torch.load(path + 'model')
+    epoch = checkpoint.get('epoch',0)
+    update = checkpoint.get('update',0)
+    model.load_state_dict(checkpoint['model_state_dict'])
+
+    print('Loaded 1 models from {}.'.format(path))
+
+    return model, epoch, update
 
 class GA:
     def __init__(self, popSize, mu, lamda):
@@ -111,6 +133,11 @@ class GA:
         self.mu = mu
         self.lamda = lamda
         self.avgFitness = []
+        #self.save_path = 'models/{}/{}'.format(game,representation)
+        #self.save_path = 'runs/{}/{}/'.format("binary","narrow")
+        self.save_path = 'runs/'
+        self.last = False
+        print(self.save_path)
 
     def __delete__(self, instance):
         print("deleted in descriptor object")
@@ -129,6 +156,7 @@ class GA:
         #sort(self._pop, lamda c: c._fitness, reverse = True)
         sorted(self._pop, key = sortfitness, reverse = True)
         self.avgFitness.append(averageLstParse(self._pop))
+        save_models(self._pop[0]._net, self.save_path, epoch = 0, update = 0)
         for i in range(self.mu):
             c = self._pop[i].copy()
             c.mutation()
@@ -137,10 +165,11 @@ class GA:
 
     def run(self, generations):
         for i in range(generations):
+            self.last = (i == generations-1)
             self.advance()
             print("done generation")
         return self.avgFitness
-        
+
 
 
 if __name__ == "__main__":
@@ -148,63 +177,9 @@ if __name__ == "__main__":
     # 1 generation = 45 minutes
     allAvgFitness = []
     #ga = GA(100, 50, 50) #mu = 50, lamda = 50
-    ga1= GA(4, 2, 2)
-    allAvgFitness.append(ga1.run(15))
+    ga1= GA(2, 1, 1)
+    allAvgFitness.append(ga1.run(1))
     del ga1
-
-    print("done ga1")
-
-    ga2 = GA(4, 2, 2)
-    allAvgFitness.append(ga2.run(15))
-    del ga2
-
-    print("done ga2")
-
-    ga3 = GA(4, 2, 2)
-    allAvgFitness.append(ga3.run(15))
-    del ga3
-
-    print("done ga3")
-
-    ga4 = GA(4, 2, 2)
-    allAvgFitness.append(ga4.run(15))
-    del ga4
-
-    print("done ga4")
-
-    ga5 = GA(4, 2, 2)
-    allAvgFitness.append(ga5.run(15))
-    del ga5
-
-    print("done ga5")
-
-    ga6 = GA(4, 2, 2)
-    allAvgFitness.append(ga6.run(15))
-    del ga6
-
-    print("done ga6")
-
-    ga7 = GA(4, 2, 2)
-    allAvgFitness.append(ga7.run(15))
-    del ga7
-
-    print("done ga7")
-
-    ga8 = GA(4, 2, 2)
-    allAvgFitness.append(ga8.run(15))
-    del ga8
-
-    print("done ga8")
-
-    ga9 = GA(4, 2, 2)
-    allAvgFitness.append(ga9.run(15))
-    del ga9
-
-    print("done ga9")
-
-    ga10 = GA(4, 2, 2)
-    allAvgFitness.append(ga10.run(15))
-    del ga10
 
     print("DONE!!!")
 

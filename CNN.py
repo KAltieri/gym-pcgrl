@@ -65,4 +65,3 @@ def obs_to_torch(obs: np.ndarray) -> torch.Tensor:
     obs = np.swapaxes(obs, 3, 2)
     # float32
     return torch.tensor(obs, dtype= torch.double, device=device)
-
